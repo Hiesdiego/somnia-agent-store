@@ -1,0 +1,14 @@
+{
+  "SASAdminHardeningV0_1Module": {
+    "proposers": ["0x5219d14dFbCF0be6EC00D6B5188fFF353aeb33BF"],
+    "executors": ["0x5219d14dFbCF0be6EC00D6B5188fFF353aeb33BF"],
+    "timelockAdmin": "0x5219d14dFbCF0be6EC00D6B5188fFF353aeb33BF",
+    "minDelaySeconds": 86400,
+    "registry": "0x25029648D4dDaE085c8db865582F43Bce2857766",
+    "billing": "0xCD5d2bF50Cd496Dad9748B4d2fDcF02C7BC82F03",
+    "sasExecutor": "0x7E5da137BEa251955C49cC7730e281E2Cd4b14Ec",
+    "autonomy": "0x475F888B8a522fA81b9B0455d94A0Dc710cBa686",
+    "executionGraph": "0x9Aaf7087044266f545FB1aa81D91DB80c3c55315",
+    "vault": "0xE7F454628390d1DD95De3D2cEB10fBFc27a9d041"
+  }
+}

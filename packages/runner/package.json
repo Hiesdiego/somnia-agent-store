@@ -1,0 +1,22 @@
+{
+  "name": "runner",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "SAS v0.1 autonomy runner - primary delegation engine for timelocked testnet operations",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "dotenv": "latest",
+    "viem": "latest",
+    "winston": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "tsx": "latest",
+    "typescript": "latest"
+  }
+}

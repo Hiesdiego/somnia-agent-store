@@ -1,0 +1,35 @@
+{
+  "name": "prophecy-companion",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3010",
+    "build": "next build",
+    "build:ci": "node scripts/check-env.mjs && next build",
+    "check:env": "node scripts/check-env.mjs",
+    "start": "next start -p 3010",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "16.2.6",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "@privy-io/react-auth": "3.27.0",
+    "@privy-io/wagmi": "4.0.8",
+    "wagmi": "3.6.15",
+    "viem": "2.50.4",
+    "@tanstack/react-query": "5.100.11",
+    "sonner": "2.0.7",
+    "lucide-react": "1.16.0"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3",
+    "@types/node": "25.9.1",
+    "@types/react": "19.2.15",
+    "@types/react-dom": "19.2.3",
+    "eslint": "10.4.0",
+    "eslint-config-next": "16.2.6"
+  }
+}
+

@@ -1,0 +1,17 @@
+{
+  "SASMultisigV0_1Module": {
+    "govOwners": [
+      "0xOWNER_1",
+      "0xOWNER_2",
+      "0xOWNER_3"
+    ],
+    "govThreshold": 2,
+    "adminOwners": [
+      "0xOWNER_A",
+      "0xOWNER_B",
+      "0xOWNER_C"
+    ],
+    "adminThreshold": 2
+  }
+}
+

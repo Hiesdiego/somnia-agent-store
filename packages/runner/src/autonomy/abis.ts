@@ -1,0 +1,236 @@
+export const AgentType = {
+  LLM_INFERENCE: 0,
+  JSON_API: 1,
+  WEBSITE_PARSE: 2,
+} as const;
+
+export const WorkflowStatus = {
+  ACTIVE: 0,
+  PAUSED: 1,
+  FINALIZED: 2,
+  CANCELLED: 3,
+} as const;
+
+export const ZERO_BYTES32 = `0x${"0".repeat(64)}` as `0x${string}`;
+export const DEFAULT_RELATION_TYPE = `0x${"01".padStart(64, "0")}` as `0x${string}`;
+
+export const REGISTRY_ABI = [
+  {
+    name: "getAllActiveAgents",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [
+      {
+        name: "agents",
+        type: "tuple[]",
+        components: [
+          { name: "id", type: "uint256" },
+          { name: "builder", type: "address" },
+          { name: "name", type: "string" },
+          { name: "description", type: "string" },
+          { name: "category", type: "string" },
+          { name: "metadataURI", type: "string" },
+          { name: "agentType", type: "uint8" },
+          { name: "status", type: "uint8" },
+          { name: "pricePerExecution", type: "uint256" },
+          { name: "somniaAgentId", type: "uint256" },
+          { name: "totalExecutions", type: "uint256" },
+          { name: "totalRevenue", type: "uint256" },
+          { name: "createdAt", type: "uint256" },
+          { name: "version", type: "uint256" },
+          { name: "isVerified", type: "bool" },
+        ],
+      },
+    ],
+  },
+] as const;
+
+export const BILLING_ABI = [
+  {
+    name: "quoteExecution",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "agentId", type: "uint256" }],
+    outputs: [
+      { name: "agentFee", type: "uint256" },
+      { name: "runtimeBudget", type: "uint256" },
+      { name: "totalCost", type: "uint256" },
+    ],
+  },
+  {
+    name: "AgentExecutionRequested",
+    type: "event",
+    inputs: [
+      { name: "executionId", type: "uint256", indexed: true },
+      { name: "agentId", type: "uint256", indexed: true },
+      { name: "subscriber", type: "address", indexed: true },
+      { name: "amountPaid", type: "uint256", indexed: false },
+      { name: "builderRevenue", type: "uint256", indexed: false },
+      { name: "platformFee", type: "uint256", indexed: false },
+    ],
+  },
+] as const;
+
+export const AUTONOMY_V4_ABI = [
+  {
+    name: "registry",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "address" }],
+  },
+  {
+    name: "billing",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "address" }],
+  },
+  {
+    name: "executors",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "executor", type: "address" }],
+    outputs: [{ name: "", type: "bool" }],
+  },
+  {
+    name: "workflowExecutors",
+    type: "function",
+    stateMutability: "view",
+    inputs: [
+      { name: "workflowId", type: "uint256" },
+      { name: "executor", type: "address" },
+    ],
+    outputs: [{ name: "", type: "bool" }],
+  },
+  {
+    name: "workflowCount",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "workflows",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "workflowId", type: "uint256" }],
+    outputs: [
+      { name: "id", type: "uint256" },
+      { name: "requester", type: "address" },
+      { name: "rootAgentId", type: "uint256" },
+      { name: "maxDepth", type: "uint256" },
+      { name: "budgetTotal", type: "uint256" },
+      { name: "budgetRemaining", type: "uint256" },
+      { name: "spentExecution", type: "uint256" },
+      { name: "spentSplits", type: "uint256" },
+      { name: "stepCount", type: "uint256" },
+      { name: "createdAt", type: "uint256" },
+      { name: "status", type: "uint8" },
+      { name: "graphWorkflowId", type: "bytes32" },
+      { name: "parentGraphWorkflowId", type: "bytes32" },
+      { name: "metadataURI", type: "string" },
+    ],
+  },
+  {
+    name: "getWorkflowStepIds",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "workflowId", type: "uint256" }],
+    outputs: [{ name: "stepIds", type: "uint256[]" }],
+  },
+  {
+    name: "steps",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "stepId", type: "uint256" }],
+    outputs: [
+      { name: "id", type: "uint256" },
+      { name: "workflowId", type: "uint256" },
+      { name: "parentStepId", type: "uint256" },
+      { name: "fromAgentId", type: "uint256" },
+      { name: "toAgentId", type: "uint256" },
+      { name: "depth", type: "uint256" },
+      { name: "maxTotalCost", type: "uint256" },
+      { name: "splitBpsTotal", type: "uint256" },
+      { name: "executed", type: "bool" },
+      { name: "executionId", type: "uint256" },
+      { name: "chargedAgentFee", type: "uint256" },
+      { name: "chargedRuntimeBudget", type: "uint256" },
+      { name: "chargedTotalCost", type: "uint256" },
+      { name: "chargedSplitTotal", type: "uint256" },
+      { name: "payloadHash", type: "bytes32" },
+      { name: "relationType", type: "bytes32" },
+      { name: "createdAt", type: "uint256" },
+      { name: "metadataURI", type: "string" },
+    ],
+  },
+  {
+    name: "planStep",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "workflowId", type: "uint256" },
+      { name: "parentStepId", type: "uint256" },
+      { name: "fromAgentId", type: "uint256" },
+      { name: "toAgentId", type: "uint256" },
+      { name: "payloadHash", type: "bytes32" },
+      { name: "maxTotalCost", type: "uint256" },
+      { name: "relationType", type: "bytes32" },
+      { name: "metadataURI", type: "string" },
+    ],
+    outputs: [{ name: "stepId", type: "uint256" }],
+  },
+  {
+    name: "executeStep",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "stepId", type: "uint256" },
+      { name: "payload", type: "bytes" },
+    ],
+    outputs: [{ name: "executionId", type: "uint256" }],
+  },
+  {
+    name: "finalizeWorkflow",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "workflowId", type: "uint256" },
+      { name: "success", type: "bool" },
+      { name: "resultHash", type: "bytes32" },
+      { name: "metadataURI", type: "string" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "WorkflowCreated",
+    type: "event",
+    inputs: [
+      { name: "workflowId", type: "uint256", indexed: true },
+      { name: "requester", type: "address", indexed: true },
+      { name: "rootAgentId", type: "uint256", indexed: true },
+      { name: "budget", type: "uint256", indexed: false },
+      { name: "maxDepth", type: "uint256", indexed: false },
+      { name: "parentGraphWorkflowId", type: "bytes32", indexed: false },
+      { name: "metadataURI", type: "string", indexed: false },
+    ],
+  },
+  {
+    name: "StepPlanned",
+    type: "event",
+    inputs: [
+      { name: "workflowId", type: "uint256", indexed: true },
+      { name: "stepId", type: "uint256", indexed: true },
+      { name: "toAgentId", type: "uint256", indexed: true },
+      { name: "parentStepId", type: "uint256", indexed: false },
+      { name: "fromAgentId", type: "uint256", indexed: false },
+      { name: "depth", type: "uint256", indexed: false },
+      { name: "maxTotalCost", type: "uint256", indexed: false },
+      { name: "payloadHash", type: "bytes32", indexed: false },
+      { name: "relationType", type: "bytes32", indexed: false },
+      { name: "metadataURI", type: "string", indexed: false },
+    ],
+  },
+] as const;

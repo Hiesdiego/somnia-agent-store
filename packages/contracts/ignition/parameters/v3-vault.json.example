@@ -1,0 +1,7 @@
+{
+  "AutopilotVaultV3Module": {
+    "billing": "0x_REPLACE_WITH_V3_BILLING",
+    "registry": "0x_REPLACE_WITH_V3_REGISTRY",
+    "relayer": "0xddd660f9c166FB6fcAfb53e4f757fF9986Ef0995"
+  }
+}

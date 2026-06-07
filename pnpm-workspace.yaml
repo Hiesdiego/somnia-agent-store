@@ -1,0 +1,12 @@
+packages:
+  - "packages/*"
+  - "!packages/runner"
+
+allowBuilds:
+  '@reown/appkit': false
+  bufferutil: false
+  esbuild: false
+  keccak: false
+  sharp: false
+  unrs-resolver: false
+  utf-8-validate: false

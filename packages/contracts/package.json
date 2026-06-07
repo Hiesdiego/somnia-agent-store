@@ -1,0 +1,47 @@
+{
+  "name": "contracts",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "SAS smart contracts — Hardhat 3 + Somnia Testnet",
+  "scripts": {
+    "hardhat": "node ./node_modules/hardhat/dist/src/cli.js",
+    "build": "node ./node_modules/hardhat/dist/src/cli.js build",
+    "test": "node ./node_modules/hardhat/dist/src/cli.js test",
+    "test:sol": "node ./node_modules/hardhat/dist/src/cli.js test solidity",
+    "test:ts": "node ./node_modules/hardhat/dist/src/cli.js test nodejs",
+    "deploy:local": "node ./node_modules/hardhat/dist/src/cli.js ignition deploy ignition/modules/SAS.ts --network localhost",
+    "deploy:testnet": "node ./node_modules/hardhat/dist/src/cli.js ignition deploy ignition/modules/SAS.ts --network somniaTestnet",
+    "deploy:autonomy:testnet": "node ./node_modules/hardhat/dist/src/cli.js ignition deploy ignition/modules/SASAutonomyV0_1.ts --network somniaTestnet --deployment-id sas-v0-1-autonomy-testnet",
+    "deploy:vault:testnet": "node ./node_modules/hardhat/dist/src/cli.js ignition deploy ignition/modules/AutopilotVaultV0_1.ts --network somniaTestnet --deployment-id sas-v0-1-vault-testnet",
+    "deploy:core:v0.1:testnet": "node ./node_modules/hardhat/dist/src/cli.js ignition deploy ignition/modules/SASCoreV0_1.ts --network somniaTestnet --deployment-id sas-v0-1-core-testnet",
+    "deploy:autonomy:v0.1:testnet": "node ./node_modules/hardhat/dist/src/cli.js ignition deploy ignition/modules/SASAutonomyV0_1.ts --network somniaTestnet --deployment-id sas-v0-1-autonomy-testnet",
+    "deploy:vault:v0.1:testnet": "node ./node_modules/hardhat/dist/src/cli.js ignition deploy ignition/modules/AutopilotVaultV0_1.ts --network somniaTestnet --deployment-id sas-v0-1-vault-testnet-payload-hash-v1",
+    "deploy:multisig:v0.1:testnet": "node ./node_modules/hardhat/dist/src/cli.js ignition deploy ignition/modules/SASMultisigV0_1.ts --network somniaTestnet --deployment-id sas-v0-1-multisig-testnet",
+    "deploy:eve:requester:testnet": "node ./node_modules/hardhat/dist/src/cli.js ignition deploy ignition/modules/EVEAgentRequester.ts --network somniaTestnet --deployment-id eve-agent-requester-testnet-v2",
+    "harden:admin:v0.1:testnet": "node ./node_modules/hardhat/dist/src/cli.js ignition deploy ignition/modules/SASAdminHardeningV0_1.ts --network somniaTestnet --deployment-id sas-v0-1-admin-hardening-testnet-r1",
+    "verify:testnet": "node ./node_modules/hardhat/dist/src/cli.js ignition deploy ignition/modules/SAS.ts --network somniaTestnet --verify",
+    "register:companion": "node scripts/register-companion-agent.mjs",
+    "deploy:eve:requester:viem": "node scripts/deploy-eve-requester-viem.mjs",
+    "test:eve:request": "node scripts/test-eve-request.mjs",
+    "update:companion": "node scripts/update-companion-price.mjs",
+    "update:companion:price": "node scripts/update-companion-price.mjs",
+    "update:companion:metadata": "node scripts/update-companion-price.mjs",
+    "governance:timelock:roles": "node scripts/rotate-timelock-roles.mjs",
+    "cleanup:companion": "node scripts/cleanup-companion-listings.mjs",
+    "deprecate:agent": "node scripts/deprecate-agent.mjs",
+    "timelock:verify-agent": "node scripts/timelock-verify-agent.mjs",
+    "node": "node ./node_modules/hardhat/dist/src/cli.js node"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ignition": "latest",
+    "@nomicfoundation/hardhat-ignition-viem": "latest",
+    "@nomicfoundation/hardhat-toolbox-viem": "latest",
+    "@nomicfoundation/hardhat-verify": "latest",
+    "hardhat": "latest",
+    "viem": "latest"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "latest",
+    "dotenv": "^17.4.2"
+  }
+}

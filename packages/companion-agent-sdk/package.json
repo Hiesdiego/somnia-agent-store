@@ -1,0 +1,32 @@
+{
+  "name": "companion-agent-sdk",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Prophecy Companion Somnia agent built with somnia-agent-kit",
+  "scripts": {
+    "admin:eve": "tsx src/admin-eve.ts",
+    "deploy:companion:somnia-agent": "tsx src/deploy-companion-somnia-agent.ts",
+    "deploy:eve:somnia-agent": "tsx src/deploy-eve-somnia-agent.ts",
+    "autonomy:outcome": "tsx src/autonomy-outcome.ts",
+    "autopilot:execute": "tsx src/autopilot-relayer.ts",
+    "autopilot:watch": "tsx src/autopilot-daemon.ts",
+    "autopilot:index": "tsx src/autopilot-indexer.ts",
+    "trader:watch": "tsx src/pc-trader-relayer.ts",
+    "type-check": "tsc --noEmit",
+    "dev": "tsx watch src/index.ts",
+    "proxy:groq": "tsx src/groq-openai-proxy.ts",
+    "start": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "dotenv": "17.4.2",
+    "somnia-agent-kit": "3.0.11",
+    "viem": "2.50.4",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "tsx": "4.22.3",
+    "typescript": "6.0.3"
+  }
+}

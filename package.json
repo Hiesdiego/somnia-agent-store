@@ -1,0 +1,50 @@
+{
+  "name": "somnia-agent-store",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AgentOs - The native agent marketplace for the Somnia ecosystem",
+  "packageManager": "pnpm@11.1.2",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build:contracts": "pnpm --filter contracts build",
+    "test:contracts": "pnpm --filter contracts test",
+    "deploy:testnet": "pnpm --filter contracts deploy:testnet",
+    "deploy:autonomy:testnet": "pnpm --filter contracts deploy:autonomy:testnet",
+    "deploy:vault:testnet": "pnpm --filter contracts deploy:vault:testnet",
+    "deploy:core:v0.1:testnet": "pnpm --filter contracts deploy:core:v0.1:testnet",
+    "deploy:autonomy:v0.1:testnet": "pnpm --filter contracts deploy:autonomy:v0.1:testnet",
+    "deploy:vault:v0.1:testnet": "pnpm --filter contracts deploy:vault:v0.1:testnet",
+    "deploy:multisig:v0.1:testnet": "pnpm --filter contracts deploy:multisig:v0.1:testnet",
+    "deploy:eve:requester:testnet": "pnpm --filter contracts deploy:eve:requester:testnet",
+    "harden:admin:v0.1:testnet": "pnpm --filter contracts harden:admin:v0.1:testnet",
+    "register:companion": "pnpm --filter contracts register:companion",
+    "update:companion": "pnpm --filter contracts update:companion",
+    "update:companion:price": "pnpm --filter contracts update:companion:price",
+    "update:companion:metadata": "pnpm --filter contracts update:companion:metadata",
+    "governance:timelock:roles": "pnpm --filter contracts governance:timelock:roles",
+    "cleanup:companion": "pnpm --filter contracts cleanup:companion",
+    "dev:frontend": "pnpm --filter frontend dev",
+    "build:frontend": "pnpm --filter frontend build",
+    "dev:predire": "pnpm --filter ./packages/predire-app dev",
+    "build:predire": "pnpm --filter ./packages/predire-app build",
+    "dev:prophecy-companion": "pnpm --filter ./packages/predire-app dev",
+    "build:prophecy-companion": "pnpm --filter ./packages/predire-app build",
+    "dev:companion-agent-sdk": "pnpm --filter companion-agent-sdk dev",
+    "start:companion-agent-sdk": "pnpm --filter companion-agent-sdk start",
+    "start:admin:eve": "pnpm --filter companion-agent-sdk admin:eve",
+    "deploy:companion:somnia-agent": "pnpm --filter companion-agent-sdk deploy:companion:somnia-agent",
+    "deploy:eve:somnia-agent": "pnpm --filter companion-agent-sdk deploy:eve:somnia-agent",
+    "dev:runner": "pnpm -C packages/runner dev",
+    "start:runner": "pnpm -C packages/runner start",
+    "autonomy:outcome": "pnpm --filter companion-agent-sdk autonomy:outcome",
+    "autopilot:execute": "pnpm --filter companion-agent-sdk autopilot:execute",
+    "autopilot:watch": "pnpm --filter companion-agent-sdk autopilot:watch",
+    "dev:indexer": "pnpm --filter indexer dev",
+    "dev": "pnpm dev:frontend"
+  },
+  "devDependencies": {
+    "concurrently": "latest"
+  }
+}
