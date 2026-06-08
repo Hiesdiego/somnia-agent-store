@@ -1,0 +1,192 @@
+services:
+  - type: web
+    runtime: docker
+    name: prophecy-companion-agent
+    plan: free
+    region: oregon
+    branch: main
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    dockerCommand: pnpm --filter companion-agent-sdk serve
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: COMPANION_SERVICE_NAME
+        value: prophecy-companion-agent
+      - key: COMPANION_SERVICE_CORS_ORIGIN
+        value: "*"
+      - key: SOMNIA_RPC_URL
+        value: https://api.infra.testnet.somnia.network
+      - key: COMPANION_LLM_PROVIDER
+        value: groq
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile
+      - key: COMPANION_OPENAI_BASE_URL
+        value: https://api.groq.com/openai/v1
+      - key: PRIVATE_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: AGENT_REGISTRY_ADDRESS
+        sync: false
+      - key: AGENT_EXECUTOR_ADDRESS
+        sync: false
+
+  - type: web
+    runtime: docker
+    name: sas-autopilot-relayer
+    plan: free
+    region: oregon
+    branch: main
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    dockerCommand: pnpm --filter companion-agent-sdk autopilot:watch
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: SERVICE_NAME
+        value: sas-autopilot-relayer
+      - key: SOMNIA_RPC_URL
+        value: https://api.infra.testnet.somnia.network
+      - key: AUTOPILOT_RELAYER_FEE_STT
+        value: "0.20"
+      - key: AUTOPILOT_LOG_CHUNK_SIZE
+        value: "900"
+      - key: AUTOPILOT_DAEMON_INTERVAL_MS
+        value: "60000"
+      - key: AUTOPILOT_MAX_EXECUTIONS_PER_SCAN
+        value: "5"
+      - key: AUTONOMY_STORE_MODE
+        value: supabase
+      - key: SUPABASE_SCHEMA
+        value: public
+      - key: PRIVATE_KEY
+        sync: false
+      - key: RELAYER_PRIVATE_KEY
+        sync: false
+      - key: AUTOPILOT_VAULT_ADDRESS
+        sync: false
+      - key: AUTOPILOT_SCAN_FROM_BLOCK
+        sync: false
+      - key: COMPANION_APP_CONTEXT_ENDPOINT
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+
+  - type: web
+    runtime: docker
+    name: eve-admin-service
+    plan: free
+    region: oregon
+    branch: main
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    dockerCommand: pnpm --filter companion-agent-sdk admin:eve
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: SERVICE_NAME
+        value: eve-admin-service
+      - key: SOMNIA_RPC_URL
+        value: https://api.infra.testnet.somnia.network
+      - key: SUPABASE_SCHEMA
+        value: public
+      - key: EVE_ALLOW_DEPRECATE
+        value: "false"
+      - key: PRIVATE_KEY
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: NEXT_PUBLIC_SAS_REGISTRY_ADDRESS
+        sync: false
+      - key: NEXT_PUBLIC_SAS_BILLING_ADDRESS
+        sync: false
+      - key: NEXT_PUBLIC_SAS_EXECUTOR_ADDRESS
+        sync: false
+      - key: NEXT_PUBLIC_SAS_AUTONOMY_V4_ADDRESS
+        sync: false
+      - key: SAS_EXECUTION_GRAPH_ADDRESS
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+
+  - type: web
+    runtime: docker
+    name: pc-trader-relayer
+    plan: free
+    region: oregon
+    branch: main
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    dockerCommand: pnpm --filter companion-agent-sdk trader:watch
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: SERVICE_NAME
+        value: pc-trader-relayer
+      - key: SOMNIA_RPC_URL
+        value: https://api.infra.testnet.somnia.network
+      - key: AUTOPILOT_LOG_CHUNK_SIZE
+        value: "900"
+      - key: PC_TRADER_DAEMON_INTERVAL_MS
+        value: "60000"
+      - key: PC_TRADER_MAX_EXECUTIONS_PER_SCAN
+        value: "1"
+      - key: PRIVATE_KEY
+        sync: false
+      - key: RELAYER_PRIVATE_KEY
+        sync: false
+      - key: AUTOPILOT_VAULT_ADDRESS
+        sync: false
+      - key: AUTOPILOT_SCAN_FROM_BLOCK
+        sync: false
+      - key: COMPANION_APP_DISCOVERY_ENDPOINT
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+
+  - type: web
+    runtime: docker
+    name: sas-autopilot-indexer
+    plan: free
+    region: oregon
+    branch: main
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    dockerCommand: pnpm --filter companion-agent-sdk autopilot:index
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: SERVICE_NAME
+        value: sas-autopilot-indexer
+      - key: SOMNIA_RPC_URL
+        value: https://api.infra.testnet.somnia.network
+      - key: AUTOPILOT_INDEXER_INTERVAL_MS
+        value: "60000"
+      - key: AUTONOMY_STORE_MODE
+        value: supabase
+      - key: SUPABASE_SCHEMA
+        value: public
+      - key: PRIVATE_KEY
+        sync: false
+      - key: AUTOPILOT_VAULT_ADDRESS
+        sync: false
+      - key: AUTOPILOT_SCAN_FROM_BLOCK
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false

@@ -169,6 +169,48 @@ Deploy:
 fly deploy -c fly.indexer.toml
 ```
 
+## Render Web Services
+
+Render free tier supports web services, not background workers. This repo now includes `render.yaml` at the repo root, with each Companion Agent daemon configured as a Docker web service that exposes `GET /health`.
+
+Render free web services spin down after 15 minutes without inbound HTTP or WebSocket traffic. This is fine for testing the Companion HTTP API, but it is not reliable for always-on relayers unless you move them to a paid instance or keep them actively receiving traffic.
+
+### Dashboard Form: Companion Agent API
+
+- Service type: Web Service
+- Repository: `Hiesdiego/somnia-agent-store`
+- Branch: `main`
+- Runtime: Docker
+- Root directory: leave blank / repo root
+- Dockerfile path: `./Dockerfile`
+- Docker context: `.`
+- Docker command: `pnpm --filter companion-agent-sdk serve`
+- Health check path: `/health`
+- Region: Oregon, or the closest available region
+- Instance type: Free
+
+Required env:
+
+```env
+PORT=10000
+COMPANION_SERVICE_NAME=prophecy-companion-agent
+COMPANION_SERVICE_CORS_ORIGIN=*
+SOMNIA_RPC_URL=https://api.infra.testnet.somnia.network
+PRIVATE_KEY=
+COMPANION_LLM_PROVIDER=groq
+GROQ_API_KEY=
+GROQ_MODEL=llama-3.3-70b-versatile
+COMPANION_OPENAI_BASE_URL=https://api.groq.com/openai/v1
+AGENT_REGISTRY_ADDRESS=
+AGENT_EXECUTOR_ADDRESS=
+```
+
+### Blueprint Option
+
+Instead of filling each service manually, use Render Blueprint from the root `render.yaml`. Render will prompt for every `sync: false` secret value during creation.
+
+For first deployment, create only `prophecy-companion-agent` manually or remove the other services from the Blueprint before applying it. Deploying all five free web services can exhaust free monthly hours quickly and relayers can sleep when idle.
+
 ### Autopilot Relayer
 
 - Railway root directory: `packages/companion-agent-sdk`
