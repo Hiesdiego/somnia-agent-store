@@ -15,6 +15,7 @@
     "trader:watch": "tsx src/pc-trader-relayer.ts",
     "type-check": "tsc --noEmit",
     "dev": "tsx watch src/index.ts",
+    "serve": "tsx src/http-service.ts",
     "proxy:groq": "tsx src/groq-openai-proxy.ts",
     "start": "tsx src/index.ts"
   },

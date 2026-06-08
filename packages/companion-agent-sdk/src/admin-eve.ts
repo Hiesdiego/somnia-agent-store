@@ -12,6 +12,7 @@ import {
   zeroHash,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
+import { startServiceHealthServer } from "./service-health.ts";
 
 const AGENT_NAME = process.env.EVE_AGENT_NAME?.trim() || "Agent E.V.E";
 
@@ -895,6 +896,20 @@ async function main() {
 
   const publicClient = createPublicClient({ chain, transport: http(rpcUrl) });
   const walletClient = createWalletClient({ account, chain, transport: http(rpcUrl) });
+  const health = startServiceHealthServer({
+    serviceName: opt("SERVICE_NAME") || AGENT_NAME,
+    getDetails: () => ({
+      address: account.address,
+      registry,
+      billing,
+      executor,
+      autonomy,
+      executionGraph,
+      dryRun,
+      loopMs,
+      maxMutationsPerCycle,
+    }),
+  });
 
   console.log(`[${AGENT_NAME}] starting`, {
     address: account.address,
@@ -910,6 +925,7 @@ async function main() {
     maxMutationsPerCycle,
     actionCooldownMs,
   });
+  health.ready();
 
   while (true) {
     try {
@@ -1417,7 +1433,9 @@ async function main() {
         agentCount: allAgents.length,
         mutationsThisCycle,
       });
+      health.beat();
     } catch (error) {
+      health.error(error);
       console.error(`[${AGENT_NAME}] cycle failed`, error);
     }
 

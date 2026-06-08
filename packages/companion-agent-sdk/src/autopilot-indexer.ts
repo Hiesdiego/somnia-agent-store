@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import { decodeEventLog } from "viem";
 import { VAULT_ABI, getAutopilotClients, optional, optionalNumber, parseArgs } from "./autopilot-common.ts";
 import { createAutonomyStore, loadAutonomyConfig } from "./autonomy/index.ts";
+import { startServiceHealthServer } from "./service-health.ts";
 
 type IndexerState = {
   lastScannedBlock: string;
@@ -138,9 +139,25 @@ async function main() {
   const dryRun = Boolean(args["dry-run"] ?? args.dryRun);
   const intervalMs = optionalNumber("AUTOPILOT_INDEXER_INTERVAL_MS", 60_000);
   const state = loadState();
+  const health = startServiceHealthServer({
+    serviceName: optional("SERVICE_NAME") || "sas-autopilot-indexer",
+    getDetails: () => ({
+      once,
+      dryRun,
+      lastScannedBlock: state.lastScannedBlock,
+      output: outputPath(),
+    }),
+  });
 
+  health.ready();
   do {
-    await scanOnce(state, !dryRun);
+    try {
+      await scanOnce(state, !dryRun);
+      health.beat();
+    } catch (error) {
+      health.error(error);
+      throw error;
+    }
     if (!once) await wait(intervalMs);
   } while (!once);
 }

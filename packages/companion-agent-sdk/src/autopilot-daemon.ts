@@ -22,6 +22,7 @@ import {
   type AutonomyStore,
 } from "./autonomy/index.ts";
 import { hashId } from "./autonomy/utils.ts";
+import { startServiceHealthServer } from "./service-health.ts";
 
 type RelayerState = {
   lastRunAt: Record<string, number>;
@@ -779,6 +780,18 @@ async function main() {
   const options = { once, dryRun, ingestOnly, missionFilter, maxExecutions };
   const autonomyConfig = loadAutonomyConfig();
   const autonomyStore = createAutonomyStore(autonomyConfig);
+  const health = startServiceHealthServer({
+    serviceName: optional("SERVICE_NAME") || "sas-autopilot-relayer",
+    getDetails: () => ({
+      once,
+      dryRun,
+      ingestOnly,
+      missionFilter: missionFilter ?? null,
+      maxExecutions,
+      lastScannedBlock: state.lastScannedBlock,
+      missionCount: state.missionIds.length,
+    }),
+  });
 
   console.log("[AutopilotDaemon] Autonomy config", {
     storeMode: autonomyConfig.storeMode,
@@ -791,12 +804,19 @@ async function main() {
     minConfidenceToExecute: autonomyConfig.minConfidenceToExecute,
     minEdgeToExecute: autonomyConfig.minEdgeToExecute,
   });
+  health.ready();
 
   do {
-    await runDueMissions(state, options, {
-      store: autonomyStore,
-      config: autonomyConfig,
-    });
+    try {
+      await runDueMissions(state, options, {
+        store: autonomyStore,
+        config: autonomyConfig,
+      });
+      health.beat();
+    } catch (error) {
+      health.error(error);
+      throw error;
+    }
     if (!once) await wait(intervalMs);
   } while (!once);
 }

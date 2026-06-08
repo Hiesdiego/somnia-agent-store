@@ -14,6 +14,7 @@ import {
   policyHash,
   summarizeModelInput,
 } from "./autopilot-common.ts";
+import { startServiceHealthServer } from "./service-health.ts";
 
 type TraderState = {
   missionIds: `0x${string}`[];
@@ -941,10 +942,28 @@ async function main() {
   const maxExecutions = Number.isFinite(maxRaw) ? Math.max(1, Math.floor(maxRaw)) : 1;
   const intervalMs = optionalNumber("PC_TRADER_DAEMON_INTERVAL_MS", 60_000);
   const state = loadState();
+  const health = startServiceHealthServer({
+    serviceName: optional("SERVICE_NAME") || "pc-trader-relayer",
+    getDetails: () => ({
+      once,
+      dryRun,
+      missionFilter: missionFilter ?? null,
+      maxExecutions,
+      lastScannedBlock: state.lastScannedBlock,
+      missionCount: state.missionIds.length,
+    }),
+  });
 
   logStep("service_start", { once, dryRun, maxExecutions, stateFile: statePath() });
+  health.ready();
   do {
-    await runOnce(state, { dryRun, maxExecutions, missionFilter });
+    try {
+      await runOnce(state, { dryRun, maxExecutions, missionFilter });
+      health.beat();
+    } catch (error) {
+      health.error(error);
+      throw error;
+    }
     if (!once) await wait(intervalMs);
   } while (!once);
 }

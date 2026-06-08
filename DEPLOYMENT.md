@@ -89,6 +89,86 @@ Do not put private keys, Supabase service-role keys, or model provider API keys 
 
 Deploy long-running or secret-bearing services to Railway. Create separate Railway services from the same GitHub repo and set each service root directory.
 
+## Fly.io
+
+Use Fly.io for Companion Agent services when the host expects an HTTP service instead of a background worker. The repo includes a root `Dockerfile` and service-specific Fly configs. Every daemon service exposes `GET /health` on `PORT` so Fly can keep the machine healthy.
+
+### Companion Agent HTTP API
+
+- App name: `prophecy-companion-agent`
+- Organization: your Fly organization
+- Branch: `main`
+- Working directory: `/`
+- Config path: `fly.toml`
+- Internal port: `8080`
+- Start command: Docker default, `pnpm --filter companion-agent-sdk serve`
+
+Endpoints:
+
+```txt
+GET /health
+POST /analyze
+GET /analyze?eventUrl=https://prophecy.social/event/12333
+```
+
+Deploy:
+
+```bash
+fly deploy -c fly.toml
+```
+
+### Autopilot Relayer
+
+- App name: `sas-autopilot-relayer`
+- Config path: `fly.autopilot.toml`
+- Internal port: `8080`
+- Start command: `pnpm --filter companion-agent-sdk autopilot:watch`
+
+Deploy:
+
+```bash
+fly deploy -c fly.autopilot.toml
+```
+
+### E.V.E Admin Service
+
+- App name: `eve-admin-service`
+- Config path: `fly.eve.toml`
+- Internal port: `8080`
+- Start command: `pnpm --filter companion-agent-sdk admin:eve`
+
+Deploy this only when admin automation is intentionally active.
+
+```bash
+fly deploy -c fly.eve.toml
+```
+
+### PC Trader Relayer
+
+- App name: `pc-trader-relayer`
+- Config path: `fly.trader.toml`
+- Internal port: `8080`
+- Start command: `pnpm --filter companion-agent-sdk trader:watch`
+
+Deploy:
+
+```bash
+fly deploy -c fly.trader.toml
+```
+
+### Autopilot Indexer
+
+- App name: `sas-autopilot-indexer`
+- Config path: `fly.indexer.toml`
+- Internal port: `8080`
+- Start command: `pnpm --filter companion-agent-sdk autopilot:index`
+
+Deploy:
+
+```bash
+fly deploy -c fly.indexer.toml
+```
+
 ### Autopilot Relayer
 
 - Railway root directory: `packages/companion-agent-sdk`

@@ -1,4 +1,6 @@
 import "dotenv/config";
+import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { z } from "zod";
 import type { OpenAIAdapter } from "somnia-agent-kit";
 
@@ -203,6 +205,10 @@ function parseInput(): CompanionInput {
   throw new Error(
     'Pass input JSON/URL or set COMPANION_EVENT_URL. Example: pnpm start -- https://prophecy.social/event/14776'
   );
+}
+
+export function parseCompanionInput(input: unknown): CompanionInput {
+  return InputSchema.parse(input);
 }
 
 function decodeHtmlEntities(value: string): string {
@@ -1083,8 +1089,7 @@ function normalizeCompanionOutput(raw: string): string {
   return JSON.stringify(result, null, 2);
 }
 
-async function main() {
-  const parsedInput = parseInput();
+export async function analyzeMarket(parsedInput: CompanionInput): Promise<string> {
   const pageContext = await fetchMarketPage(parsedInput);
   debugLog("Prepared market context", {
     title: pageContext.title || "unknown",
@@ -1104,10 +1109,22 @@ async function main() {
     temperature: Number(optional("COMPANION_TEMPERATURE") || 0.2),
   });
   const content = typeof response.content === "string" ? response.content : String(response);
-  console.log(normalizeCompanionOutput(content));
+  return normalizeCompanionOutput(content);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+async function main() {
+  console.log(await analyzeMarket(parseInput()));
+}
+
+function isCliEntryPoint() {
+  const entry = process.argv[1];
+  if (!entry) return false;
+  return resolve(entry) === fileURLToPath(import.meta.url);
+}
+
+if (isCliEntryPoint()) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}

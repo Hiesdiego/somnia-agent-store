@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 
-const port = Number(process.env.GROQ_PROXY_PORT || 8787);
+const port = Number(process.env.PORT || process.env.GROQ_PROXY_PORT || 8787);
 const groqApiKey = process.env.GROQ_API_KEY?.trim();
 const defaultModel = process.env.GROQ_MODEL?.trim() || "llama-3.3-70b-versatile";
 const targetUrl = "https://api.groq.com/openai/v1/chat/completions";
