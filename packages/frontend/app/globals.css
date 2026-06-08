@@ -41,6 +41,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -55,6 +56,7 @@ body {
   font-family: var(--font-display);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 body::before {
@@ -282,6 +284,50 @@ ul, ol {
 .animate-pulse-glow { animation: pulse-glow 2s ease infinite; }
 
 @media (max-width: 900px) {
+  .sas-navbar-inner {
+    height: auto !important;
+    min-height: 60px !important;
+    padding: 10px 14px !important;
+    gap: 10px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .sas-navbar-brand {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+
+  .sas-navbar-brand span:first-of-type {
+    font-size: 14px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  .sas-navbar-links {
+    order: 3 !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+    padding: 2px 0 4px !important;
+    scroll-snap-type: x mandatory;
+  }
+
+  .sas-navbar-links a {
+    flex: 0 0 auto !important;
+    scroll-snap-align: start;
+    white-space: nowrap;
+  }
+
+  .sas-navbar-account {
+    min-width: 0 !important;
+  }
+
+  .landing-hero-grid,
+  .landing-stats-grid,
+  .docs-layout {
+    min-width: 0 !important;
+  }
+
   .landing-hero-grid {
     grid-template-columns: 1fr !important;
   }
@@ -300,7 +346,53 @@ ul, ol {
 }
 
 @media (max-width: 640px) {
+  .sas-navbar-inner {
+    padding-inline: 10px !important;
+  }
+
+  .sas-navbar-brand img {
+    width: 38px !important;
+    height: 20px !important;
+  }
+
+  .sas-navbar-brand span:first-of-type {
+    max-width: 145px !important;
+  }
+
+  .sas-navbar-brand span:last-of-type {
+    display: none !important;
+  }
+
+  .sas-wallet-button {
+    max-width: 142px !important;
+    padding: 6px 8px !important;
+    gap: 6px !important;
+  }
+
+  .sas-wallet-avatar,
+  .sas-wallet-balance {
+    display: none !important;
+  }
+
+  .sas-wallet-address {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
+  section,
+  main,
+  .card,
+  .glass {
+    min-width: 0;
+  }
+
   .landing-eve-cta {
     grid-template-columns: 1fr !important;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    white-space: normal;
   }
 }

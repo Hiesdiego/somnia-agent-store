@@ -60,6 +60,7 @@ export function Navbar() {
 
   return (
     <nav
+      className="sas-navbar"
       style={{
         position: "sticky",
         top: 0,
@@ -71,6 +72,7 @@ export function Navbar() {
       }}
     >
       <div
+        className="sas-navbar-inner"
         style={{
           maxWidth: "1280px",
           margin: "0 auto",
@@ -84,6 +86,7 @@ export function Navbar() {
       >
         {/* Logo */}
         <Link
+          className="sas-navbar-brand"
           href="/"
           style={{
             display: "flex",
@@ -128,7 +131,7 @@ export function Navbar() {
         </Link>
 
         {/* Nav links */}
-        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+        <div className="sas-navbar-links" style={{ display: "flex", alignItems: "center", gap: "4px" }}>
           {NAV_LINKS.map((link) => {
             const active = pathname.startsWith(link.href);
             return (
@@ -175,7 +178,7 @@ export function Navbar() {
         </div>
 
         {/* Right side */}
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
+        <div className="sas-navbar-account" style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
           {/* Wrong network warning */}
           {authenticated && isWrongNetwork && (
             <div
@@ -200,6 +203,7 @@ export function Navbar() {
           ) : (
             <div ref={ref} style={{ position: "relative" }}>
               <button
+                className="sas-wallet-button"
                 onClick={() => setOpen(!open)}
                 style={{
                   display: "flex",
@@ -218,6 +222,7 @@ export function Navbar() {
               >
                 {/* Avatar */}
                 <div
+                  className="sas-wallet-avatar"
                   style={{
                     width: "20px",
                     height: "20px",
@@ -225,11 +230,12 @@ export function Navbar() {
                     background: "linear-gradient(135deg, var(--purple-500), var(--teal-500))",
                   }}
                 />
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px" }}>
+                <span className="sas-wallet-address" style={{ fontFamily: "var(--font-mono)", fontSize: "12px" }}>
                   {address ? formatAddress(address) : user?.email?.address?.split("@")[0] ?? "User"}
                 </span>
                 {balance && (
                   <span
+                    className="sas-wallet-balance"
                     style={{
                       fontFamily: "var(--font-mono)",
                       fontSize: "11px",

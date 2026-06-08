@@ -1242,6 +1242,27 @@ details {
 .result-grid > div {
   padding: 14px;
   border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.result-panel,
+.result-panel *,
+.settings-panel,
+.settings-panel * {
+  min-width: 0;
+}
+
+.result-grid h3,
+.opportunity-grid h3,
+.decision-card h3,
+.reason-box p,
+.clean-list li,
+.source-list li,
+.settings-grid code,
+.run-links,
+.link {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .insight-grid {
@@ -1596,6 +1617,7 @@ html,
 body {
   background: #000;
   color: var(--text);
+  overflow-x: hidden;
 }
 
 body::before {
@@ -1622,6 +1644,7 @@ body::after {
   display: grid;
   grid-template-columns: 304px minmax(0, 1fr);
   background: #000;
+  min-width: 0;
 }
 
 .pc-sidebar {
@@ -1646,6 +1669,7 @@ body::after {
   background: rgba(255, 255, 255, 0.035);
   color: var(--text);
   text-decoration: none;
+  min-width: 0;
 }
 
 .pc-sidebar-brand img {
@@ -1660,6 +1684,9 @@ body::after {
 .pc-sidebar-system strong {
   display: block;
   color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .pc-sidebar-brand span,
@@ -3223,6 +3250,19 @@ details,
     border-top: 0;
   }
 
+  .pc-topbar > div,
+  .pc-topbar h2,
+  .pc-topbar-actions,
+  .wallet-menu {
+    min-width: 0;
+  }
+
+  .pc-topbar h2 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .pc-topbar-actions {
     justify-content: end;
     min-width: 0;
@@ -3299,6 +3339,19 @@ details,
 
   .pc-workspace-tabs .workspace-tab.active strong {
     color: #001b08;
+  }
+
+  .result-panel {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .result-grid,
+  .opportunity-grid,
+  .insight-grid {
+    width: 100%;
+    max-width: 100%;
   }
 
   .mission-table,

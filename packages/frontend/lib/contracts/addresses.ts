@@ -18,7 +18,7 @@ export const CONTRACT_ADDRESSES = {
     SASAgentTreasury: "0xde70575ace592017bed2843bD5be554033F9cD1F" as `0x${string}`,
     SASQuoteBook: "0xA2Ab18B57461D8591c24C1A7Fa04800a60B3EecF" as `0x${string}`,
     SASSpawner: "0xFf0315993644A45bd09E45f2B199c6DC7e46C912" as `0x${string}`,
-    AutopilotVault: "0xE7F454628390d1DD95De3D2cEB10fBFc27a9d041" as `0x${string}`,
+    AutopilotVault: "0x553CEE1B1aA3cD44E25Ff64Bf4dAf2b8E4C6eDC2" as `0x${string}`,
   },
   somniaMainnet: {
     chainId: 5031,

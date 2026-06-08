@@ -312,6 +312,27 @@ type RuntimeHealth = {
   payloadBytes?: number;
 };
 
+type ServiceHealthItem = {
+  key: string;
+  label: string;
+  configured: boolean;
+  ok: boolean;
+  status: string;
+  endpoint: string | null;
+  statusCode?: number;
+  service?: string;
+  details?: Record<string, unknown>;
+  lastBeatAt?: string;
+  uptimeSeconds?: number;
+  error?: string;
+};
+
+type ServiceHealthResponse = {
+  ok: boolean;
+  checkedAt: string;
+  services: ServiceHealthItem[];
+};
+
 type Workspace = "scout" | "analysis" | "autopilot" | "runs" | "settings";
 type ExecutionMode = "billing" | "autonomy-v4";
 
@@ -1455,6 +1476,7 @@ export default function ProphecyCompanionPage() {
   const [delegatedAgentIds, setDelegatedAgentIds] = useState<bigint[]>([]);
   const [runtimeHealth, setRuntimeHealth] = useState<RuntimeHealth | null>(null);
   const [runtimeHealthLoading, setRuntimeHealthLoading] = useState(false);
+  const [serviceHealth, setServiceHealth] = useState<ServiceHealthResponse | null>(null);
   const [walletMenuOpen, setWalletMenuOpen] = useState(false);
 
   const activeWorkspace = useMemo<Workspace>(() => {
@@ -1609,6 +1631,9 @@ export default function ProphecyCompanionPage() {
   const parsedEvent = parseProphecyEventUrl(form.prophecyEventUrl.trim());
   const latestHeartbeat = opsData?.heartbeats?.[0];
   const relayerStale = isRelayerStale(latestHeartbeat);
+  const renderServices = serviceHealth?.services ?? [];
+  const healthyRenderServices = renderServices.filter((service) => service.ok).length;
+  const renderServicesReady = renderServices.length > 0 && healthyRenderServices === renderServices.length;
   const policyCostPreview = estimatePolicyCost({
     maxRuns: missionMaxRuns,
     funding: missionFundAmount,
@@ -1872,6 +1897,27 @@ export default function ProphecyCompanionPage() {
     if (activeWorkspace !== "autopilot" && activeWorkspace !== "runs" && activeWorkspace !== "settings") return;
     void refreshOpsData();
   }, [activeWorkspace]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function refreshServiceHealth() {
+      try {
+        const response = await fetch("/api/service-health", { cache: "no-store" });
+        const data = (await response.json()) as ServiceHealthResponse;
+        if (!cancelled) setServiceHealth(data);
+      } catch {
+        if (!cancelled) setServiceHealth(null);
+      }
+    }
+
+    void refreshServiceHealth();
+    const interval = window.setInterval(refreshServiceHealth, 90_000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+    };
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -3202,7 +3248,7 @@ export default function ProphecyCompanionPage() {
           />
           <div>
             <strong>Prophecy Companion</strong>
-            <span>Prophecy Companion</span>
+            <span>Market intelligence</span>
           </div>
         </Link>
 
@@ -3231,6 +3277,14 @@ export default function ProphecyCompanionPage() {
           <div>
             <span className={`pc-led ${relayerStale ? "blocked" : "ready"}`} />
             <strong>{relayerStale ? "Relayer offline" : "Relayer online"}</strong>
+          </div>
+          <div>
+            <span className={`pc-led ${renderServicesReady ? "ready" : "blocked"}`} />
+            <strong>
+              {renderServices.length > 0
+                ? `${healthyRenderServices}/${renderServices.length} services`
+                : "Services unknown"}
+            </strong>
           </div>
         </div>
 
@@ -4952,6 +5006,13 @@ export default function ProphecyCompanionPage() {
             <p className="k">Scan from block</p>
             <strong>{AUTOPILOT_SCAN_FROM_BLOCK.toString()}</strong>
           </div>
+          {renderServices.map((service) => (
+            <div key={service.key}>
+              <p className="k">{service.label}</p>
+              <strong>{service.ok ? "Ready" : service.status}</strong>
+              <code>{service.endpoint ?? "Not configured"}</code>
+            </div>
+          ))}
         </div>
         <div className="workflow-recovery">
           <div>

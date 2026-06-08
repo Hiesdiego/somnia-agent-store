@@ -175,6 +175,17 @@ Render free tier supports web services, not background workers. This repo now in
 
 Render free web services spin down after 15 minutes without inbound HTTP or WebSocket traffic. This is fine for testing the Companion HTTP API, but it is not reliable for always-on relayers unless you move them to a paid instance or keep them actively receiving traffic.
 
+Current deployed endpoints:
+
+```txt
+Companion Agent API: https://prophecy-companion-agent.onrender.com
+PC Trader Relayer: https://pc-trader-relayer.onrender.com
+EVE Admin Service: https://eve-admin-service.onrender.com
+SAS Autopilot Relayer: https://sas-autopilot-relayer-6rm4.onrender.com
+Prophecy Companion frontend: https://somnia-agent-store-predire-app.vercel.app
+SAS Marketplace frontend: https://somnia-agent-store-frontend.vercel.app
+```
+
 ### Dashboard Form: Companion Agent API
 
 - Service type: Web Service
