@@ -33,6 +33,7 @@ const SUPABASE_SCHEMA = serverEnv("SUPABASE_SCHEMA") || "public";
 type QueryOptions = {
   missionId?: string | null;
   vaultAddress?: string | null;
+  account?: string | null;
   limit?: number;
 };
 
@@ -68,6 +69,14 @@ function appendVaultFilter(params: string[], column: string, vaultAddress?: stri
   if (vaultAddress && /^0x[a-fA-F0-9]{40}$/.test(vaultAddress)) params.push(`${column}=eq.${vaultAddress}`);
 }
 
+function appendAccountFilter(params: string[], column: string, account?: string | null) {
+  if (account && /^0x[a-fA-F0-9]{40}$/.test(account)) params.push(`${column}=eq.${account}`);
+}
+
+function appendMissionInFilter(params: string[], column: string, missionIds: string[]) {
+  if (missionIds.length > 0) params.push(`${column}=in.(${missionIds.join(",")})`);
+}
+
 async function loadOpsData(options: QueryOptions) {
   const limit = Math.max(1, Math.min(100, options.limit ?? 40));
   const missionParams = ["select=*", "order=updated_at.desc", `limit=${limit}`];
@@ -100,8 +109,9 @@ async function loadOpsData(options: QueryOptions) {
   appendVaultFilter(heartbeatParams, "vault_address", options.vaultAddress);
   appendVaultFilter(traderStrategyParams, "vault_address", options.vaultAddress);
   appendVaultFilter(traderCycleParams, "vault_address", options.vaultAddress);
+  appendAccountFilter(traderStrategyParams, "owner_address", options.account);
 
-  const [heartbeats, missions, runs, contexts, triggers, snapshots, theses, retries, traderStrategies, traderCycles, traderPositions] =
+  const [heartbeats, missions, runs, contexts, triggers, snapshots, theses, retries, traderStrategies] =
     await Promise.all([
       selectTable("pc_relayer_heartbeats", heartbeatParams.join("&")),
       selectTable("pc_mission_status", missionParams.join("&")),
@@ -112,9 +122,34 @@ async function loadOpsData(options: QueryOptions) {
       selectTable("pc_thesis_revisions", thesisParams.join("&")),
       selectTable("pc_retry_queue", retryParams.join("&")),
       selectTable("pc_trader_strategies", traderStrategyParams.join("&")),
+    ]);
+
+  let traderCycles: unknown[] = [];
+  let traderPositions: unknown[] = [];
+  if (options.account && /^0x[a-fA-F0-9]{40}$/.test(options.account) && !options.missionId) {
+    const traderMissionIds = traderStrategies
+      .map((strategy) => {
+        const record = strategy as { mission_id?: unknown };
+        return typeof record.mission_id === "string" && /^0x[a-fA-F0-9]{64}$/.test(record.mission_id)
+          ? record.mission_id
+          : null;
+      })
+      .filter((missionId): missionId is string => Boolean(missionId));
+
+    if (traderMissionIds.length > 0) {
+      appendMissionInFilter(traderCycleParams, "mission_id", traderMissionIds);
+      appendMissionInFilter(traderPositionParams, "mission_id", traderMissionIds);
+      [traderCycles, traderPositions] = await Promise.all([
+        selectTable("pc_trader_cycles", traderCycleParams.join("&")),
+        selectTable("pc_trader_positions", traderPositionParams.join("&")),
+      ]);
+    }
+  } else {
+    [traderCycles, traderPositions] = await Promise.all([
       selectTable("pc_trader_cycles", traderCycleParams.join("&")),
       selectTable("pc_trader_positions", traderPositionParams.join("&")),
     ]);
+  }
 
   return {
     configured: true,

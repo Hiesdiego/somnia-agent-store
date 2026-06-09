@@ -1896,7 +1896,7 @@ export default function ProphecyCompanionPage() {
   useEffect(() => {
     if (activeWorkspace !== "autopilot" && activeWorkspace !== "runs" && activeWorkspace !== "settings") return;
     void refreshOpsData();
-  }, [activeWorkspace]);
+  }, [activeWorkspace, address]);
 
   useEffect(() => {
     let cancelled = false;
@@ -2455,7 +2455,12 @@ export default function ProphecyCompanionPage() {
     setOpsLoading(true);
     setOpsError(null);
     try {
-      const response = await fetch(`/api/autopilot-ops?vaultAddress=${SAS.autopilotVault}&limit=80`, {
+      const params = new URLSearchParams({
+        vaultAddress: SAS.autopilotVault,
+        limit: "80",
+      });
+      if (address) params.set("account", address);
+      const response = await fetch(`/api/autopilot-ops?${params.toString()}`, {
         cache: "no-store",
       });
       const data = (await response.json()) as OpsData;
