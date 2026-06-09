@@ -151,7 +151,7 @@ services:
       - key: AUTOPILOT_SCAN_FROM_BLOCK
         sync: false
       - key: COMPANION_APP_DISCOVERY_ENDPOINT
-        sync: false
+        value: https://somnia-agent-store-predire-app.vercel.app/api/market-discovery
       - key: SUPABASE_URL
         sync: false
       - key: SUPABASE_SERVICE_ROLE_KEY

@@ -149,6 +149,7 @@ fly deploy -c fly.eve.toml
 - Config path: `fly.trader.toml`
 - Internal port: `8080`
 - Start command: `pnpm --filter companion-agent-sdk trader:watch`
+- Discovery endpoint: `https://somnia-agent-store-predire-app.vercel.app/api/market-discovery`
 
 Deploy:
 

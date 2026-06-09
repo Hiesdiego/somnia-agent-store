@@ -325,7 +325,7 @@ async function discoverMissionIds(
 }
 
 async function fetchCandidates(metadata: TraderMetadata): Promise<TraderCandidate[]> {
-  const endpoint = optional("COMPANION_APP_DISCOVERY_ENDPOINT");
+  const endpoint = discoveryEndpoint();
   if (!endpoint) return [];
   const response = await fetch(endpoint, {
     method: "POST",
@@ -336,9 +336,27 @@ async function fetchCandidates(metadata: TraderMetadata): Promise<TraderCandidat
       seedUrls: [],
     }),
   });
-  if (!response.ok) throw new Error(`Discovery endpoint failed (${response.status}): ${await response.text()}`);
+  if (!response.ok) {
+    const body = await response.text();
+    const preview = body.replace(/\s+/g, " ").slice(0, 500);
+    throw new Error(`Discovery endpoint failed (${response.status}) at ${endpoint}: ${preview}`);
+  }
   const data = (await response.json()) as { candidates?: TraderCandidate[] };
   return (data.candidates ?? []).filter((candidate) => candidate.url && candidate.eventId);
+}
+
+function discoveryEndpoint(): string | null {
+  const configured = optional("COMPANION_APP_DISCOVERY_ENDPOINT") ?? optional("COMPANION_APP_BASE_URL");
+  if (!configured) return null;
+  try {
+    const url = new URL(configured);
+    if (!url.pathname || url.pathname === "/") {
+      url.pathname = "/api/market-discovery";
+    }
+    return url.toString();
+  } catch {
+    return configured;
+  }
 }
 
 function chooseCandidate(candidates: TraderCandidate[]) {
