@@ -2947,6 +2947,37 @@ details,
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+@media (min-width: 1181px) {
+  .pc-sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 30;
+    width: 304px;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .pc-main {
+    grid-column: 2;
+    max-width: none;
+    overflow-x: hidden;
+  }
+}
+
+.trader-section .strategy-form,
+.watch-section .watch-form,
+.watch-section .autonomy-actions {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.watch-section .ops-strip {
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+
+.watch-section .ops-strip .btn {
+  justify-self: end;
+}
+
 @media (max-width: 1180px) {
   .trader-section .strategy-form,
   .trader-section .strategy-stats,
@@ -2960,6 +2991,10 @@ details,
 
   .watch-section .autonomy-note {
     grid-column: 1 / -1;
+  }
+
+  .pc-main {
+    grid-column: auto;
   }
 }
 

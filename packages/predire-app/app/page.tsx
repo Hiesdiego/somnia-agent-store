@@ -3632,7 +3632,6 @@ export default function ProphecyCompanionPage() {
             <span className="pill">Trader</span>
           </div>
 
-        <div className="strategy-panel">
           <div className="strategy-head">
             <div>
               <p className="k">Strategy mandate</p>
@@ -3784,7 +3783,6 @@ export default function ProphecyCompanionPage() {
               ))}
             </div>
           )}
-        </div>
 
           </section>
 
