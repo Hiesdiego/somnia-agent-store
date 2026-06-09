@@ -304,6 +304,15 @@ async function discoverMissionIds(
   const latest = await clients.publicClient.getBlockNumber();
   const chunkSize = BigInt(Math.max(1, optionalNumber("AUTOPILOT_LOG_CHUNK_SIZE", 900)));
   const ids = new Set<`0x${string}`>(state.missionIds);
+  let chunkCount = 0;
+
+  logStep("mission_scan_start", {
+    fromBlock: fromBlock.toString(),
+    latestBlock: latest.toString(),
+    chunkSize: chunkSize.toString(),
+    cachedMissionCount: ids.size,
+    persist,
+  });
 
   while (fromBlock <= latest) {
     const toBlock = fromBlock + chunkSize - 1n > latest ? latest : fromBlock + chunkSize - 1n;
@@ -319,8 +328,22 @@ async function discoverMissionIds(
     state.lastScannedBlock = toBlock.toString();
     state.missionIds = [...ids];
     if (persist) saveState(state);
+    chunkCount++;
+    if (chunkCount % 100 === 0 || toBlock === latest) {
+      logStep("mission_scan_progress", {
+        scannedToBlock: toBlock.toString(),
+        latestBlock: latest.toString(),
+        chunkCount,
+        missionCount: ids.size,
+      });
+    }
     fromBlock = toBlock + 1n;
   }
+  logStep("mission_scan_complete", {
+    latestBlock: latest.toString(),
+    chunkCount,
+    missionCount: ids.size,
+  });
   return [...ids];
 }
 
@@ -569,6 +592,13 @@ async function runOnce(state: TraderState, options: { dryRun: boolean; maxExecut
   const supabase = new SupabaseClient();
   const relayerFeeStt = optional("PC_TRADER_RELAYER_FEE_STT") ?? optional("AUTOPILOT_RELAYER_FEE_STT") ?? "0";
   const relayerFee = parseEther(relayerFeeStt);
+  logStep("scan_prepare", {
+    dryRun: options.dryRun,
+    maxExecutions: options.maxExecutions,
+    missionFilter: options.missionFilter ?? null,
+    lastScannedBlock: state.lastScannedBlock,
+    cachedMissionCount: state.missionIds.length,
+  });
   const missionIds = options.missionFilter ? [options.missionFilter] : await discoverMissionIds(clients, state, !options.dryRun);
   let executions = 0;
   let skipped = 0;
