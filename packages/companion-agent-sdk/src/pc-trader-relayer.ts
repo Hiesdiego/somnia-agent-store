@@ -375,6 +375,8 @@ function discoveryEndpoint(): string | null {
     const url = new URL(configured);
     if (!url.pathname || url.pathname === "/") {
       url.pathname = "/api/market-discovery";
+    } else if (url.pathname.replace(/\/+$/, "") === "/api/discovery") {
+      url.pathname = "/api/market-discovery";
     }
     return url.toString();
   } catch {
